@@ -1,0 +1,93 @@
+div#import-container
+{
+    margin-left: calc(-2px + -26.60vw);
+    margin-top: calc(-2px + -12.60vw);
+}
+div#import-box
+{
+    width: 53.20vw;
+    height: 17.50vw;
+}
+div#import-header
+{
+    top: 0.70vw;
+    bottom: 14.70vw;
+    font-size: 1.75vw;
+}
+div#import-label-paste, div#import-label-click, div#import-label-drop
+{
+    font-size: 1.40vw;
+    top: 3.50vw;
+    bottom: 0.70vw;
+}
+div#import-box > div > span
+{
+ display: block; font-weight: bold; font-size: 2.10vw; 
+}
+div#import-label-paste
+{
+ left: 0.70vw; right: 36.40vw; 
+}
+div#import-label-click
+{
+ left: 18.90vw; right: 18.90vw; 
+}
+div#import-label-drop 
+{
+ left: 36.40vw; right: 0.70vw; 
+}
+div#zoom-viewer
+{
+    top: 0.70vw;
+    left: 0.70vw;
+    right: calc(50% + 37.10vw);
+    bottom: 0.70vw;
+    padding: 0.70vw;
+}
+div.deck
+{
+    left: calc(50% - 36.40vw);
+    width: 72.80vw;
+}
+div#toolbox
+{
+    top: 0.70vw;
+    bottom: 0.70vw;
+    left: calc(50% + 37.10vw);
+    right: 0.70vw;
+}
+div#main-deck
+{
+    top: 0.70vw;
+    height: 42.00vw;
+}
+div#extra-deck
+{
+    top: 43.40vw;
+    height: 12.60vw;
+}
+div#side-deck
+{
+    top: 56.70vw;
+    height: 12.60vw;
+}
+div#main-deck-label, div#extra-deck-label, div#side-deck-label
+{
+    left: 2.10vw;
+}
+div.card
+{
+    width:    7.00vw;
+    height:   9.80vw;
+}
+div.card > div.limited
+{
+    top: 0.03vw;
+    right: 0.03vw;
+    width: 2.10vw;
+    height: 2.10vw;
+}
+body.stack-ltr div.card > div.limited
+{
+    left: 0.03vw;
+}
