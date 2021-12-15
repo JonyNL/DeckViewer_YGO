@@ -91,6 +91,7 @@ div#modal-container > div
       width: 64.5%;
       margin-right: 2%;
       float: right;
+      overflow-y: auto;
   }
 }
 
