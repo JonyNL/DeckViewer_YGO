@@ -75,7 +75,7 @@ div#modal-toolbox-main
 {
     padding: 1px 3px;
     text-align: center;
-    height:16em;
+    height:12em;
 }
 
 div#modal-toolbox-main > div
@@ -90,7 +90,7 @@ div#modal-toolbox-price
 {
     padding: 1px 3px;
     text-align: center;
-    height: calc(100% - 17.6em);
+    height: calc(100% - 13.6em);
     overflow-x: hidden;
     overflow-y: auto;
 }

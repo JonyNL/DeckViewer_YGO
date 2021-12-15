@@ -193,7 +193,6 @@ var zoomedCard = null;
 function ZoomThisCard()
 {
     hidden = isHidden(document.getElementById('zoom-viewer'));
-    console.log();
 
     if (this != zoomedCard)
     {
@@ -205,7 +204,6 @@ function ZoomThisCard()
         var id = this.cardId;
 
     if (hidden) {
-      console.log("is hidden");
       document.getElementById('modal-viewer').zoomedCardId = id;
       document.getElementById('modal-viewer').classList.remove('konami','good','bad');
       document.getElementById('modal-zoom-image').firstChild.removeAttribute('src');
@@ -215,7 +213,6 @@ function ZoomThisCard()
       document.getElementById('modal-zoom-ygorgdb').style.visibility = 'hidden';
       document.getElementById('modal-zoom-konamidb').style.visibility = 'hidden';
 
-      console.log(id);
       if ((''+id).length <= 8)
       {
           document.getElementById('modal-zoom-yugipedia').href = ('https://yugipedia.com/wiki/' + ('0000000'+id).slice(-8));
@@ -245,7 +242,6 @@ function ZoomThisCard()
       document.getElementById('zoom-ygorgdb').style.visibility = 'hidden';
       document.getElementById('zoom-konamidb').style.visibility = 'hidden';
 
-      console.log(id);
       if ((''+id).length <= 8)
       {
           document.getElementById('zoom-yugipedia').href = ('https://yugipedia.com/wiki/' + ('0000000'+id).slice(-8));
@@ -262,10 +258,8 @@ function ZoomThisCard()
       else
       {
         document.getElementById('zoom-image').firstChild.src = 'https://storage.googleapis.com/ygoprodeck.com/pics/' + id + '.jpg';
-        console.log('request data');
         RequestCardData(id, UpdateZoomData);
       }
-      console.log("not hidden");
     }
   }
 }

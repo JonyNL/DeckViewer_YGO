@@ -207,14 +207,14 @@ let updateFromHashData = function()
 {
     if (!hashData.decks.main)
     {
+      console.log('noHashData');
         document.body.className = 'import';
         document.title = 'Deck Viewer';
         document.getElementById('main-deck-container').innerHTML = '';
         document.getElementById('extra-deck-container').innerHTML = '';
         document.getElementById('side-deck-container').innerHTML = '';
-        document.getElementById('navBar').classList.add('collapse');
-        document.getElementById('navBar').classList.add('multi-collapse');
-        document.getElementById('navBar').classList.remove('show');
+        document.getElementById('navBar').classList.add("collapse","multi-collapse");
+        document.getElementById('navBar').classList.remove("show");
         document.getElementById('main-container').style.display = 'none';
         document.getElementById('import-container').style.display = 'block';
         return;

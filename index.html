@@ -456,18 +456,14 @@
     }
 
     function deckAdjust() {
+      console.log('deck-adjust');
+
       if (isPortrait()) {
-        console.log("isPortrait -- " + isPortrait());
-        document.getElementById('navBar').classList.remove('collapsing');
-        document.getElementById('navBar').classList.remove('collapse');
-        document.getElementById('navBar').classList.remove('multi-collapse');
         document.getElementById('navBar').classList.add('show');
-        console.log(document.getElementById('navBar').classList);
+        if (document.getElementById('import-container').style.display === 'block')
+          document.getElementById('navBar').classList.remove('show');
+
         document.getElementById('toolbox').style.display= 'none';
-      //  document.getElementById('navicon').parentElement.removeAttribute('data-bs-toggle');
-      //  document.getElementById('toolbox').parentElement.removeAttribute('data-bs-toggle');
-      //  document.getElementById('navicon').parentElement.removeAttribute('data-bs-target');
-      //  document.getElementById('toolbox').parentElement.removeAttribute('data-bs-target');
         document.getElementById('import-display').style.display= 'inline-block';
         document.getElementById('import-box').style.display= 'none';
         document.getElementById("main-container").style.height='95%';
@@ -479,10 +475,6 @@
         document.getElementById('navBar').classList.add('collapse');
         document.getElementById('navBar').classList.add('multi-collapse');
         document.getElementById('toolbox').removeAttribute('style');
-        //document.getElementById('navicon').parentElement.setAttribute('data-bs-toggle', 'collapse');
-        //document.getElementById('toolbox').parentElement.setAttribute('data-bs-toggle', 'collapse');
-        //document.getElementById('navicon').parentElement.setAttribute('data-bs-target', '.multi-collapse');
-        //document.getElementById('toolbox').parentElement.setAttribute('data-bs-target', '.multi-collapse');
         document.getElementById('import-display').style.display= 'none';
         document.getElementById('import-box').style.display= 'inline-block';
       }
@@ -508,10 +500,8 @@
     }
 
     function changeSize(isVisible) {
-      console.log("sizeChangedFromFunc -- " + isPortrait());
       if (isPortrait()) {
         if (isVisible === null) {
-          console.log('null');
           return;
         }
         ShowModal('modal-toolbox');
@@ -523,6 +513,7 @@
           ClosePriceBreakdown();
         }
       }
+      console.log('deck adjust');
       deckAdjust();
     }
   </script>

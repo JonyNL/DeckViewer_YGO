@@ -2,12 +2,16 @@ let currentModal = null;
 function ShowModal(id)
 {
     var newModal;
-    console.log(id + " -- " + currentModal);
     if (id)
         newModal = document.getElementById(id);
 
-    if (currentModal)
-        currentModal.style.display = 'none';
+    if (currentModal) {
+      currentModal.style.display = 'none';
+      var toolboxModal = (currentModal.id === 'modal-toolbox');
+      if (toolboxModal){
+        ClosePriceBreakdownModal();
+      }
+    }
     if (newModal)
         newModal.style.display = 'block';
     document.getElementById('modal-background').style.display = newModal ? 'block' : 'none';

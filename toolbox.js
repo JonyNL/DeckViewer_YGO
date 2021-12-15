@@ -436,7 +436,11 @@ let updateCardPrice = function(data)
         this.className = 'price-entry price-failed';
         this.errorElement.title = data.message;
     }
-    UpdatePriceTotal();
+    if (isPortrait()){
+      UpdatePriceTotalModal();
+    } else {
+      UpdatePriceTotal();
+    }
 };
 
 let AddPriceBreakdownForCards = function(container, tag, index)
@@ -485,7 +489,7 @@ function LoadPriceBreakdown()
 
 function LoadPriceBreakdownModal()
 {
-    document.getElementById('modal-toolbox').style.height = '100%';
+    //document.getElementById('modal-toolbox').style.height = '100%';
     var button = document.getElementById('modal-toolbox-price-load');
     button.firstElementChild.style.display = 'block';
     var container = document.getElementById('modal-toolbox-price-list');
@@ -519,7 +523,7 @@ function ClosePriceBreakdown()
 
 function ClosePriceBreakdownModal()
 {
-    document.getElementById('modal-toolbox').style.height = '';
+    //document.getElementById('modal-toolbox').style.height = '';
     var button = document.getElementById('modal-toolbox-price-load');
     button.style.display = 'block';
     button.firstElementChild.style.display = 'none';
@@ -543,7 +547,7 @@ document.addEventListener("DOMContentLoaded",function()
     /* Modal toolbox */
     document.getElementById('modal-toolbox-settings').addEventListener("click", function() { ShowModal('modal-settings'); });
     document.getElementById('modal-toolbox-title').addEventListener("click", function() { SetDeckTitle(window.prompt("New title:", GetDeckTitle())); });
-    document.getElementById('modal-toolbox-close').addEventListener("click", function() { document.location.hash = ''; ReloadFromHashData(); });
+    document.getElementById('modal-toolbox-close').addEventListener("click", function() { document.location.hash = ''; ReloadFromHashData(); ShowModal(null);});
     document.getElementById('modal-toolbox-copyurl').addEventListener("click", CopyURL);
     document.getElementById('modal-toolbox-export-ydk').addEventListener("click", ExportYDK);
     document.getElementById('modal-toolbox-export-text').addEventListener("click", ExportText);
