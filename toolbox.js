@@ -24,11 +24,24 @@ function CopyURLFailed()
     }, 2000);
 }
 
+function CopyURLFailedModal()
+{
+    const button = document.getElementById('modal-toolbox-copyurl');
+    button.firstElementChild.innerText = 'Failed 😔\uFE0E';
+    button.firstElementChild.style.display = 'block';
+    window.setTimeout(() =>
+    {
+        button.firstElementChild.style.display = '';
+        button.currentlyDisabled = false;
+    }, 2000);
+}
+
 function CopyURL()
 {
+  console.log(this);
     if (this.currentlyDisabled)
         return;
-    
+
     this.currentlyDisabled = true;
     if (!navigator.clipboard)
     {
@@ -45,6 +58,30 @@ function CopyURL()
             this.currentlyDisabled = false;
         }, 2000);
     }, CopyURLFailed);
+}
+
+function CopyURLModal()
+{
+  console.log(this);
+    if (this.currentlyDisabled)
+        return;
+
+    this.currentlyDisabled = true;
+    if (!navigator.clipboard)
+    {
+        CopyURLFailedModal();
+        return;
+    }
+    navigator.clipboard.writeText(document.location.href).then(() =>
+    {
+        this.firstElementChild.innerText = 'Copied!';
+        this.firstElementChild.style.display = 'block';
+        window.setTimeout(() =>
+        {
+            this.firstElementChild.style.display = '';
+            this.currentlyDisabled = false;
+        }, 2000);
+    }, CopyURLFailedModal);
 }
 
 let getExportedFileName = function(ending)
@@ -71,7 +108,7 @@ function ExportYDK()
     lines.push('!side');
     addYDKLines(lines, 'side');
     lines.push('');
-    
+
     SaveAs(getExportedFileName('.ydk'), lines.join('\n'));
 }
 
@@ -106,6 +143,7 @@ let addTextLines = function(lines, cards, label)
 };
 function ExportText()
 {
+  console.log(this);
     this.firstElementChild.style.display = 'block';
     RequestAllCardData((data) =>
     {
@@ -113,9 +151,9 @@ function ExportText()
         addTextLines(lines, data.main, 'Main Deck');
         addTextLines(lines, data.extra, 'Extra Deck');
         addTextLines(lines, data.side, 'Side Deck');
-        
+
         SaveAs(getExportedFileName('.txt'), lines.join('\n'));
-        
+
         this.firstElementChild.style.display = '';
     });
 }
@@ -149,13 +187,13 @@ let addRedditLines = function(lines, cards, label, splitLabels)
             t = 1;
         else if (card.type === 'Trap Card')
             t = 2;
-        
+
         if (!(card.name in maps[t]))
             maps[t][card.name] = 1;
         else
             maps[t][card.name] += 1;
     }
-    
+
     addRedditGroupLines(lines, Object.entries(maps[0]).sort(redditCmp), 'MONSTER CARDS', splitLabels);
     addRedditGroupLines(lines, Object.entries(maps[1]).sort(redditCmp), 'SPELL CARDS', splitLabels);
     addRedditGroupLines(lines, Object.entries(maps[2]).sort(redditCmp), 'TRAP CARDS', splitLabels);
@@ -163,6 +201,7 @@ let addRedditLines = function(lines, cards, label, splitLabels)
 };
 function ExportReddit()
 {
+  console.log(this);
     if (this.currentlyDisabled)
         return;
     this.currentlyDisabled = true;
@@ -175,10 +214,10 @@ function ExportReddit()
         addRedditLines(lines, data.main, 'MAIN DECK', true);
         addRedditLines(lines, data.extra, 'EXTRA DECK', false);
         addRedditLines(lines, data.side, 'SIDE DECK', false);
-        
+
         this.firstElementChild.style.display = '';
         this.currentlyDisabled = false;
-        
+
         document.getElementById('modal-copy-container').innerText = lines.join('\n');
         ShowModal('modal-copyable');
     });
@@ -195,7 +234,7 @@ let getKonamiList = function(deck)
             t = 1;
         else if (card.type === 'Trap Card')
             t = 2;
-        
+
         if (!(card.name in maps[t]))
             maps[t][card.name] = 1;
         else
@@ -252,6 +291,19 @@ function UpdatePriceTotal()
     document.getElementById('toolbox-price-list').firstElementChild.priceElement.innerText = (GetUserSettingBool('useTcgplayerPrices') ? '$' : '€') + total.toFixed(2);
 }
 
+function UpdatePriceTotalModal()
+{
+    var container = document.getElementById('modal-toolbox-price-list');
+    var total = 0;
+    for (var i=0; i<container.children.length; ++i)
+    {
+        var el = container.children[i];
+        if (el.priceAmount < Infinity)
+            total += el.priceAmount * el.count;
+    }
+    document.getElementById('modal-toolbox-price-list').firstElementChild.priceElement.innerText = (GetUserSettingBool('useTcgplayerPrices') ? '$' : '€') + total.toFixed(2);
+}
+
 let cardmarketEscape = function(name)
 {
     return name.replace(/[^a-zA-Z0-9]+/g,'-').replace(/^-/,'').replace(/-$/,'');
@@ -262,16 +314,16 @@ let createListEntry = function(cardName)
     container.count = 1;
     container.priceAmount = 0;
     container.className = 'price-entry price-loading';
-    
+
     var name = document.createElement('div');
     name.className = 'price-name';
     name.innerText = cardName;
     container.appendChild(name);
-    
+
     var price = document.createElement('div');
     price.className = 'price-price';
     container.appendChild(price);
-    
+
     var ygopElement = document.createElement('div');
     ygopElement.className = 'price-link-ygop';
     var ygopLink = document.createElement('a');
@@ -282,7 +334,7 @@ let createListEntry = function(cardName)
     ygopLink.appendChild(ygopIcon);
     ygopElement.appendChild(ygopLink);
     container.appendChild(ygopElement);
-    
+
     var cmElement = document.createElement('div');
     cmElement.className = 'price-link-cm';
     var cmLink = document.createElement('a');
@@ -293,24 +345,24 @@ let createListEntry = function(cardName)
     cmLink.appendChild(cmIcon);
     cmElement.appendChild(cmLink);
     container.appendChild(cmElement);
-    
+
     var progress = document.createElement('div');
     progress.className = 'price-progress';
     progress.innerText = 'Loading...';
     container.appendChild(progress);
-    
+
     var error = document.createElement('div');
     error.className = 'price-error';
     error.innerText = 'API failed';
     container.appendChild(error);
-    
+
     container.nameElement = name;
     container.priceElement = price;
 	container.ygopIconElement = ygopIcon;
     container.ygopLinkElement = ygopLink;
     container.cmLinkElement = cmLink;
     container.errorElement = error;
-    
+
     return container;
 };
 let updateCardPrice = function(data)
@@ -332,7 +384,7 @@ let updateCardPrice = function(data)
             this.priceAmount = data.card_prices[0].cardmarket_price;
             this.priceElement.innerText = '€'+this.priceAmount.toFixed(2);
         }
-		
+
 		if (data.tcgplayer_url)
 		{
 			var tcgplayerURL = new URL(data.tcgplayer_url);
@@ -350,7 +402,7 @@ let updateCardPrice = function(data)
 				tcgplayerURL.searchParams.delete('utm_medium');
 				tcgplayerURL.searchParams.delete('utm_source');
 			}
-			
+
 			this.ygopIconElement.src = 'https://www.tcgplayer.com/favicon.ico';
 			this.ygopLinkElement.href = tcgplayerURL.href;
 			this.ygopLinkElement.title = 'View card on tcgplayer.com';
@@ -361,12 +413,12 @@ let updateCardPrice = function(data)
 			this.ygopLinkElement.href = 'https://yugiohprices.com/card_price?name=' + encodeURIComponent(data.name);
 			this.ygopLinkElement.title = 'View card on yugiohprices.com';
 		}
-		
+
         var cardmarketURL = new URL(data.cardmarket_url || ('https://www.cardmarket.com/en/YuGiOh/Cards/' + cardmarketEscape(data.name)));
 		cardmarketURL.searchParams.delete('utm_source');
 		cardmarketURL.searchParams.delete('utm_medium');
 		cardmarketURL.searchParams.delete('utm_campaign');
-			
+
 		this.cmLinkElement.href = cardmarketURL.href;
 
         var siblings = this.parentElement.children;
@@ -398,7 +450,7 @@ let AddPriceBreakdownForCards = function(container, tag, index)
             ++(index[cardId].count);
             continue;
         }
-        
+
         var entry = createListEntry('#'+cardId);
         container.appendChild(entry);
         index[cardId] = entry;
@@ -408,20 +460,21 @@ let AddPriceBreakdownForCards = function(container, tag, index)
 
 function LoadPriceBreakdown()
 {
+    document.getElementById('toolbox').style.height = '100%';
     var button = document.getElementById('toolbox-price-load');
     button.firstElementChild.style.display = 'block';
     var container = document.getElementById('toolbox-price-list');
     while (container.lastChild)
         container.removeChild(container.lastChild);
-    
+
     button.firstElementChild.style.display = '';
     button.style.display = 'none';
-    
+
     var total = createListEntry('== PRICE BREAKDOWN ==');
     total.priceAmount = Infinity;
     total.className = 'price-entry price-total';
     container.appendChild(total);
-    
+
     var index = {}
     AddPriceBreakdownForCards(container, 'main', index);
     AddPriceBreakdownForCards(container, 'side', index);
@@ -430,12 +483,47 @@ function LoadPriceBreakdown()
     container.style.display = 'block';
 }
 
+function LoadPriceBreakdownModal()
+{
+    document.getElementById('modal-toolbox').style.height = '100%';
+    var button = document.getElementById('modal-toolbox-price-load');
+    button.firstElementChild.style.display = 'block';
+    var container = document.getElementById('modal-toolbox-price-list');
+    while (container.lastChild)
+        container.removeChild(container.lastChild);
+
+    button.firstElementChild.style.display = '';
+    button.style.display = 'none';
+
+    var total = createListEntry('== PRICE BREAKDOWN ==');
+    total.priceAmount = Infinity;
+    total.className = 'price-entry price-total';
+    container.appendChild(total);
+
+    var index = {}
+    AddPriceBreakdownForCards(container, 'main', index);
+    AddPriceBreakdownForCards(container, 'side', index);
+    AddPriceBreakdownForCards(container, 'extra', index);
+    UpdatePriceTotalModal();
+    container.style.display = 'block';
+}
+
 function ClosePriceBreakdown()
 {
+    document.getElementById('toolbox').style.height = '';
     var button = document.getElementById('toolbox-price-load');
     button.style.display = 'block';
     button.firstElementChild.style.display = 'none';
     document.getElementById('toolbox-price-list').style.display = 'none';
+}
+
+function ClosePriceBreakdownModal()
+{
+    document.getElementById('modal-toolbox').style.height = '';
+    var button = document.getElementById('modal-toolbox-price-load');
+    button.style.display = 'block';
+    button.firstElementChild.style.display = 'none';
+    document.getElementById('modal-toolbox-price-list').style.display = 'none';
 }
 
 document.addEventListener("DOMContentLoaded",function()
@@ -448,6 +536,21 @@ document.addEventListener("DOMContentLoaded",function()
     document.getElementById('toolbox-export-text').addEventListener("click", ExportText);
     document.getElementById('toolbox-export-reddit').addEventListener("click", ExportReddit);
     document.getElementById('toolbox-export-qr').addEventListener("click", ExportQRCode);
-    
     document.getElementById('toolbox-price-load').addEventListener("click", LoadPriceBreakdown);
+
+    document.getElementById('toolbox-fullscreen').addEventListener("click", openFullscreen);
+
+    /* Modal toolbox */
+    document.getElementById('modal-toolbox-settings').addEventListener("click", function() { ShowModal('modal-settings'); });
+    document.getElementById('modal-toolbox-title').addEventListener("click", function() { SetDeckTitle(window.prompt("New title:", GetDeckTitle())); });
+    document.getElementById('modal-toolbox-close').addEventListener("click", function() { document.location.hash = ''; ReloadFromHashData(); });
+    document.getElementById('modal-toolbox-copyurl').addEventListener("click", CopyURL);
+    document.getElementById('modal-toolbox-export-ydk').addEventListener("click", ExportYDK);
+    document.getElementById('modal-toolbox-export-text').addEventListener("click", ExportText);
+    document.getElementById('modal-toolbox-export-reddit').addEventListener("click", ExportReddit);
+    document.getElementById('modal-toolbox-export-qr').addEventListener("click", ExportQRCode);
+    document.getElementById('modal-toolbox-price-load').addEventListener("click", LoadPriceBreakdownModal);
+
+    document.getElementById('modal-toolbox-fullscreen').addEventListener("click", openFullscreen);
+
 });

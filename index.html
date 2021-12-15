@@ -1,144 +1,531 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="x-ua-compatible" content="ie=edge" />
-        <meta name="viewport" content="width=1000, initial-scale=1" />
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
 
-        <title>Deck Viewer</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
-        <link rel="stylesheet" href="cardviewer.css" />
-        <link rel="stylesheet" href="modals.css"     />
-        <link rel="stylesheet" href="toolbox.css"    />
-        <link rel="stylesheet" href="ygodeck.css"    />
-        <link rel="stylesheet" href="narrow.css"     media="screen and (max-aspect-ratio: 10/7)" />
-        <link rel="manifest"   href="manifest.json"  />
+  <title>Title</title>
+  <style media="screen">
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: lightgrey;
+    }
 
-        <script defer src="include/easy.qrcode.js"></script>
-        <script defer src="cardviewer.js"></script>
-        <script defer src="carddata.js"></script>
-        <script defer src="compression.js"></script>
-        <script defer src="import-base.js"></script>
-        <script defer src="import-duelingbook.js"></script>
-        <script defer src="import-pdf.js"></script>
-        <script defer src="import-ydk.js"></script>
-        <script defer src="modals.js"></script>
-        <script defer src="orgdbdata.js"></script>
-        <script defer src="settings.js"></script>
-        <script defer src="toolbox.js"></script>
-        <script defer src="ygodeck.js"></script>
-    </head>
+    /***** Scrollbar *****/
+    /* width */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
 
-    <body ondrop="HandleDrop(event);" ondragover="HandleDrag(event);">
-        <noscript>Please enable Javascript.</noscript>
+    /* Track */
+    ::-webkit-scrollbar-track {
+      margin: 1.5px;
+      background: #f1f1f1;
+      border-radius: 6px;
+    }
 
-        <div id="import-container" class="noselect">
-            <div id="import-box">
-                <div id="import-header">To get started...</div>
-                <div id="import-label-paste"><span>Paste</span> a supported link</div>
-                <div id="import-separator-1"></div>
-                <div id="import-label-click"><span>Click</span> to select a YDK file</div>
-                <div id="import-separator-2"></div>
-                <div id="import-label-drop"><span>Drop</span> a file or link here</div>
-                <div id="import-status"></div>
-            </div>
-            <div id="import-subtext"><span>Developed</span> by <a href="https://discordapp.com/users/114706168005394435/" rel="author external nofollow" target="_blank">@gallantron#1059</a> | <a id="subtext-about">About</a> | <a id="subtext-privacy">Privacy</a> | <span>API data</span> by <a href="https://ygoprodeck.com" rel="noreferrer noopener" target="_blank">YGOPRODeck</a></div>
-        </div>
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 6px;
+    }
 
-        <div id="zoom-viewer">
-            <div id="zoom-image"><img src="zoom-placeholder.png" /></div>
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    /*********************/
+
+    img {
+      width: 100%;
+      border-radius: 4px;
+    }
+
+    .limited {
+      position: absolute;
+      width: 0%;
+    }
+
+    .container-fluid {
+      height: 95%;
+      width: 100%;
+    }
+
+    .nav {
+      background: darkgray;
+      border-bottom-style: solid;
+      border-right-style: solid;
+      border-radius: 8px;
+      display: flow-root;
+      height: 5%;
+    }
+
+    @media screen and (orientation:portrait) {
+      .y-main-card {
+        padding: .5%;
+        width: 20%;
+      }
+
+      .y-main-card:hover {}
+
+      .y-ex-card {
+        padding: .5%;
+        width: 20%;
+      }
+
+      .y-ex-card:hover {}
+
+      .y-side-card {
+        padding: .5%;
+        width: 20%;
+      }
+
+      .y-side-card:hover {}
+
+    }
+
+
+    @media screen and (orientation:landscape) {
+
+      .y-main-card {
+        padding: .05%;
+        width: 10%;
+      }
+
+      .y-main-card:hover {
+        transform: scale(1.2);
+        z-index: 1;
+      }
+
+      .y-ex-card {
+        padding: 0px;
+        width: 10%;
+        margin-right: -3.58%;
+      }
+
+      .y-ex-card:hover {
+        transform: scale(1.2);
+      }
+
+      .y-side-card {
+        padding: 0px;
+        width: 10%;
+        margin-right: -3.58%;
+      }
+
+      .y-side-card:hover {
+        transform: scale(1.2);
+      }
+    }
+
+    .col {
+      border: 4px solid;
+      border-radius: 10px;
+      margin-left: 2px;
+      margin-right: 2px;
+      background: darkgrey;
+    }
+
+    .row {
+      height: 100%;
+      padding-top: .2%;
+      padding-bottom: .2%;
+    }
+
+    .icon {
+      width: 3vw;
+      height: 100%;
+      background: lightgrey;
+      border-radius: 5px;
+      padding: 5px;
+    }
+
+    div#zoom-name {
+        background: lightgrey;
+        border-radius: 4px;
+        margin: 2%;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    div#zoom-viewer {
+      height: 100%;
+      overflow: auto;
+    }
+
+    div#zoom-links {
+      width: fit-content;
+      margin-left: auto;
+      margin-bottom: 2%;
+      margin-top: 2%;
+      height: 6%;
+    }
+
+    div#zoom-text {
+      background: lightgrey;
+      border-radius: 4px;
+      padding: 2%;
+      margin-bottom: 2%;
+    }
+
+    div#col2 {
+      min-width: 65%;
+      height: 100%;
+      border: 0px;
+      margin-left: 0px;
+      margin-right: 0px;
+      padding-left: 2px;
+      padding-right: 2px;
+      overflow: auto;
+    }
+
+    div#main-deck {
+      padding-left: 14px;
+      padding-right: 14px;
+      margin-top: 1%;
+      margin-bottom: .6%;
+    }
+
+    div#extra-deck {
+      padding-left: 14px;
+      padding-right: 14px;
+      margin-top: .2%;
+      margin-bottom: .6%;
+    }
+
+    div#side-deck {
+      padding-left: 14px;
+      padding-right: 14px;
+      margin-top: .2%;
+      margin-bottom: 1%;
+    }
+
+    li#deck-name {
+      float: left;
+      height: 100%;
+      width: 90%;
+      text-align: center;
+      font-size: 3.5vh;
+      font-family: auto;
+      font-weight: bold;
+    }
+
+    li#coll-btn {
+      float: right;
+      height: 100%;
+      width: 10%;
+    }
+
+    img#navicon {
+      float: right;
+      width: auto;
+      height: 100%;
+      padding: 10%;
+    }
+    .deck-label {
+      position: relative;
+      border: 3px solid;
+      border-radius: 10px;
+      font-size: 2vh;
+      font-weight: bold;
+      margin-left: 15px;
+      margin-right: 2px;
+      margin-bottom: -25px;
+      padding-left: 5px;
+      padding-right: 5px;
+      background: rgba(170, 170, 170, 0.7);
+      width: fit-content;
+      z-index: 2;
+    }
+  </style>
+</head>
+
+<body onload="deckAdjust()" onresize="deckAdjust()" ondrop="HandleDrop(event);"
+      ondragover="HandleDrag(event);">
+  <ul id="navBar" class="nav collapse multi-collapse show"
+  aria-expanded="true">
+    <li id="deck-name" class="nav-item">
+      <div>Deck name</div>
+    <li id="coll-btn" class="nav-item">
+      <a class="nav-link active" data-bs-toggle="collapse"
+      aria-current="page" data-bs-target=".multi-collapse"
+      style="width: auto;height: 100%;padding: 0;">
+      <img  onclick="changeSize(true)" id="navicon" src="navbar.png" alt=""></a>
+  </ul>
+
+  <div id="import-container" class="noselect">
+      <div id="import-box">
+          <div id="import-header">To get started...</div>
+          <div id="import-label-paste"><span>Paste</span> a supported link</div>
+          <div id="import-separator-1"></div>
+          <div id="import-label-click"><span>Click</span> to select a YDK file</div>
+          <div id="import-separator-2"></div>
+          <div id="import-label-drop"><span>Drop</span> a file or link here</div>
+          <div id="import-status"></div>
+      </div>
+      <div id="import-display">
+          <div id="import-header">To get started...</div>
+          <div id="import-label-click"><span>Tap</span> to select a YDK file</div>
+          <div id="import-status"></div>
+      </div>
+      <div id="import-subtext"><span>Rebuilt</span> from <a
+        href="https://discordapp.com/users/114706168005394435/"
+        rel="author external nofollow" target="_blank">@gallantron#1059</a>'s
+        page <a href="https://yugiohdeck.github.io/#" rel="author external nofollow"
+        target="_blank">Deck Viewer</a> | <a id="subtext-about">About</a> |
+        <a id="subtext-privacy">Privacy</a> | <span>API data</span> by <a
+        href="https://ygoprodeck.com" rel="noreferrer noopener" target="_blank">YGOPRODeck</a>
+      </div>
+  </div>
+
+  <div id="main-container" class="container-fluid">
+    <div class="row align-items-start">
+      <div class="col show d-none d-lg-block" id="zoom-viewer">
             <div id="zoom-name"></div>
-            <div id="zoom-text" style="font-style: italic">Click any card to view it here...</div>
+            <div id="zoom-image"><img src="zoom-placeholder.png" /></div>
             <div id="zoom-links">
-                <a id="zoom-ygorgdb" title="View card rulings on the YGOrganization DB" target="_blank"><img src="favicon.ico" /></a>
-                <a id="zoom-konamidb" title="View card on the English Konami DB" rel="noreferrer noopener" target="_blank"><img src="https://www.db.yugioh-card.com/yugiohdb/external/image/yugioh.ico" /></a>
-                <a id="zoom-yugipedia" title="View card on Yugipedia" rel="noreferrer noopener" target="_blank"><img src="https://ms.yugipedia.com/6/64/Favicon.ico" /></a>
+                <a id="zoom-ygorgdb" title="View card rulings on the YGOrganization DB" target="_blank"><img class="icon" src="favicon.ico" style="width: auto;"/></a>
+                <a id="zoom-konamidb" title="View card on the English Konami DB" rel="noreferrer noopener" target="_blank"><img class="icon" src="https://www.db.yugioh-card.com/yugiohdb/external/image/yugioh.ico" style="width: auto;"/></a>
+                <a id="zoom-yugipedia" title="View card on Yugipedia" rel="noreferrer noopener" target="_blank"><img class="icon" src="https://ms.yugipedia.com/6/64/Favicon.ico" style="width: auto;"/></a>
             </div>
+              <div id="zoom-text" style="font-style: italic">Click any card to view it here...</div>
+      </div>
+      <div id="col2" class="col">
+        <div class="deck-label">Main Deck</div>
+        <div id="main-deck" class="col">
+          <div id="main-deck-container" class="row"></div>
+        </div>
+        <div class="deck-label">Extra Deck</div>
+        <div id="extra-deck" class="col">
+          <div id="extra-deck-container" class="row"></div>
+        </div>
+        <div class="deck-label">Side Deck</div>
+        <div id="side-deck" class="col">
+          <div id="side-deck-container" class="row"></div>
         </div>
 
-        <div id="main-deck" class="deck">
-            <div id="main-deck-label" class="noselect"></div>
-            <div class="deck-border"></div>
-            <div id="main-deck-container"></div>
-        </div>
-        <div id="extra-deck" class="deck">
-            <div id="extra-deck-label" class="noselect"></div>
-            <div class="deck-border"></div>
-            <div id="extra-deck-container"></div>
-        </div>
-        <div id="side-deck" class="deck">
-            <div id="side-deck-label" class="noselect"></div>
-            <div class="deck-border"></div>
-            <div id="side-deck-container"></div>
-        </div>
-
-        <div id="toolbox">
-            <div id="toolbox-main">
-                <div>
-                    <div id="toolbox-settings" class="toolbox-button noselect">Settings</div>
-                    <div id="toolbox-title" class="toolbox-button noselect">Change Title</div>
-                    <div id="toolbox-copyurl" class="toolbox-button noselect">Copy URL<div class="toolbox-indicator"></div></div>
-                    <div id="toolbox-close" class="toolbox-button noselect">Close Deck</div>
-                </div>
-                <div>
-                    <div id="toolbox-export-ydk" class="toolbox-button noselect">Export .ydk</div>
-                    <div id="toolbox-export-text" class="toolbox-button noselect">Export .txt<div class="toolbox-indicator">Working...</div></div>
-                    <div id="toolbox-export-reddit" class="toolbox-button noselect">Copy reddit R/F<div class="toolbox-indicator">Working...</div></div>
-                    <div id="toolbox-export-qr" class="toolbox-button noselect">View QR code</div>
-                </div>
+      </div>
+      <div id="toolbox" class="col collapse multi-collapse" aria-expanded="false">
+        Toolbox
+        <button type="button" class="btn-close float-end" aria-label="Close"
+        data-bs-toggle="collapse" data-bs-target=".multi-collapse"
+        onclick="changeSize(false)"></button>
+        <div id="toolbox-main">
+            <div>
+                <div id="toolbox-settings" class="toolbox-button noselect">Settings</div>
+                <div id="toolbox-fullscreen" class="toolbox-button noselect">Open fullscreen</div>
+                <div id="toolbox-title" class="toolbox-button noselect">Change Title</div>
+                <div id="toolbox-copyurl" class="toolbox-button noselect">Copy URL<div class="toolbox-indicator"></div></div>
+                <div id="toolbox-close" class="toolbox-button noselect">Close Deck</div>
             </div>
-            <div id="toolbox-price">
-                <div id="toolbox-price-load" class="toolbox-button noselect">Load price breakdown<div class="toolbox-indicator">Loading...</div></div>
-                <div id="toolbox-price-list" class="noselect">
-                </div>
+            <div>
+                <div id="toolbox-export-ydk" class="toolbox-button noselect">Export .ydk</div>
+                <div id="toolbox-export-text" class="toolbox-button noselect">Export .txt<div class="toolbox-indicator">Working...</div></div>
+                <div id="toolbox-export-reddit" class="toolbox-button noselect">Copy reddit R/F<div class="toolbox-indicator">Working...</div></div>
+                <div id="toolbox-export-qr" class="toolbox-button noselect">View QR code</div>
             </div>
         </div>
-
-        <div id="modal-background"></div>
-        <div id="modal-container">
-            <div id="modal-settings">
-                <div>Stack duplicate cards <div id="switch-stackDuplicates" class="switch"><div class="switch-bar"></div><div class="switch-button"></div></div></div>
-                <div>Stack cards left-to-right <div id="switch-stackLTR" class="switch"><div class="switch-bar"></div><div class="switch-button"></div></div></div>
-                <div>Use high-resolution cards in overview <div id="switch-highResCards" class="switch"><div class="switch-bar"></div><div class="switch-button"></div></div></div>
-                <div>Use TCGPlayer prices in price breakdown <div id="switch-useTcgplayerPrices" class="switch"><div class="switch-bar"></div><div class="switch-button"></div></div></div>
-                <div>Immediately load price breakdown <div id="switch-alwaysLoadPrices" class="switch"><div class="switch-bar"></div><div class="switch-button"></div></div></div>
-                <div>Use OCG banlist <div id="switch-ocgBanlist" class="switch"><div class="switch-bar"></div><div class="switch-button"></div></div></div>
-                <div>Only use Konami DB data <div id="switch-konamiDBData" class="switch"><div class="switch-bar"></div><div class="switch-button"></div></div></div>
-            </div>
-            <div id="modal-about" class="noselect">
-                <div><b>About</b>
-
-Developed and maintained by <a href="https://www.reddit.com/user/gallantron/" rel="author external nofollow" target="_blank">/u/gallantron</a> for <a href="https://www.reddit.com/r/yugioh/" target="_blank">/r/yugioh</a>.
-
-While hoping it shall not become necessary, the author would like to grant to any person obtaining a copy of this web application the rights to use, copy, modify, merge, publish or distribute the application or copies thereof in the event that both the original author and the current maintainer have become unreachable.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-This web application makes use of copyrighted, unlicensed text and imagery from the Yu-Gi-Oh! TRADING CARD GAME (©1996 KAZUKI TAKAHASHI). Due to the nature of the application, the author believes this to qualify as Fair Use under U.S. copyright law.
-
-For information about how this application protects your data, please refer to the "Privacy" modal.
-                </div>
-            </div>
-            <div id="modal-privacy" class="noselect">
-                <div><b>Privacy</b>
-
-This application is currently hosted using <a href="https://pages.github.com/" rel="noreferrer noopener" target="_blank">GitHub pages</a>.
-As a result of you accessing this page, some potentially identifying information about your connection has unavoidably been exposed to the GitHub servers due to how the internet works. The author cannot speak for whether GitHub stores copies of this information.
-
-The server hosting this application does not receive any information about the decks or cards you are viewing. All deck data is encoded in the anchor tag portion of the hyperlink URI, which is never transmitted to the server by your browser. This deck data is processed exclusively via client-side Javascript, which can be freely reviewed in unobfuscated form by perusing the dev console in your browser.
-
-In the course of visualizing the deck data, card data and imagery is retrieved from the <a href="https://db.ygoprodeck.com/api-guide/" rel="noreferrer noopener" target="_blank">YGOPRODeck API</a>, again exposing some identifying information by necessity, combined with information about the card you are requesting. The author does not know whether YGOPRODeck stores this information longer than is necessary, but feels obliged to point out that YGOPRODeck has the <i>capability</i> to identify the cards you are viewing, and pattern analysis <i>could</i> allow them to reconstruct deck lists from this data.
-
-The author does not believe YGOPRODeck to be engaged in any of the hypotheticals outlined, but feels compelled to point them out regardless.
-                </div>
-            </div>
-            <div id="modal-qr">
-            </div>
-            <div id="modal-copyable">
-                <div id="modal-copy-container"></div>
-                <div id="modal-copy-button" class="toolbox-button noselect">Click to copy<div class="toolbox-indicator">Copied!</div></div>
+        <div id="toolbox-price">
+            <div id="toolbox-price-load" class="toolbox-button noselect">Load price breakdown<div class="toolbox-indicator">Loading...</div></div>
+            <div id="toolbox-price-list" class="noselect">
             </div>
         </div>
-    </body>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-background"></div>
+  <div id="modal-container">
+      <div id="modal-viewer">
+              <div id="modal-zoom-name"></div>
+              <div id="modal-zoom-image"><img src="zoom-placeholder.png" /></div>
+              <div id="modal-zoom-text"  style="font-style: italic;">Click any card to view it here...</div>
+              <div id="modal-zoom-links">
+                  <a id="modal-zoom-ygorgdb" title="View card rulings on the YGOrganization DB" target="_blank"><img class="icon" src="favicon.ico" style="width: auto;"/></a>
+                  <a id="modal-zoom-konamidb" title="View card on the English Konami DB" rel="noreferrer noopener" target="_blank"><img class="icon" src="https://www.db.yugioh-card.com/yugiohdb/external/image/yugioh.ico" style="width: auto;"/></a>
+                  <a id="modal-zoom-yugipedia" title="View card on Yugipedia" rel="noreferrer noopener" target="_blank"><img class="icon" src="https://ms.yugipedia.com/6/64/Favicon.ico" style="width: auto;"/></a>
+              </div>
+      </div>
+      <div id="modal-toolbox" class="col" aria-expanded="false">
+        <p style="margin: 0; width: 100%; text-align: center;">
+          Toolbox
+        </p>
+        <div id="modal-toolbox-main">
+            <div>
+                <div id="modal-toolbox-settings" class="toolbox-button noselect">Settings</div>
+                <div id="modal-toolbox-fullscreen" class="toolbox-button noselect">Open fullscreen</div>
+                <div id="modal-toolbox-title" class="toolbox-button noselect">Change Title</div>
+                <div id="modal-toolbox-copyurl" class="toolbox-button noselect">Copy URL<div class="toolbox-indicator"></div></div>
+                <div id="modal-toolbox-close" class="toolbox-button noselect">Close Deck</div>
+            </div>
+            <div>
+                <div id="modal-toolbox-export-ydk" class="toolbox-button noselect">Export .ydk</div>
+                <div id="modal-toolbox-export-text" class="toolbox-button noselect">Export .txt<div class="toolbox-indicator">Working...</div></div>
+                <div id="modal-toolbox-export-reddit" class="toolbox-button noselect">Copy reddit R/F<div class="toolbox-indicator">Working...</div></div>
+                <div id="modal-toolbox-export-qr" class="toolbox-button noselect">View QR code</div>
+            </div>
+        </div>
+        <div id="modal-toolbox-price">
+            <div id="modal-toolbox-price-load" class="toolbox-button noselect">Load price breakdown<div class="toolbox-indicator">Loading...</div></div>
+            <div id="modal-toolbox-price-list" class="noselect">
+            </div>
+        </div>
+      </div>
+      <div id="modal-settings">
+          <div>Stack duplicate cards <div id="switch-stackDuplicates" class="switch"><div class="switch-bar"></div><div class="switch-button"></div></div></div>
+          <div>Stack cards left-to-right <div id="switch-stackLTR" class="switch"><div class="switch-bar"></div><div class="switch-button"></div></div></div>
+          <div>Use high-resolution cards in overview <div id="switch-highResCards" class="switch"><div class="switch-bar"></div><div class="switch-button"></div></div></div>
+          <div>Use TCGPlayer prices in price breakdown <div id="switch-useTcgplayerPrices" class="switch"><div class="switch-bar"></div><div class="switch-button"></div></div></div>
+          <div>Immediately load price breakdown <div id="switch-alwaysLoadPrices" class="switch"><div class="switch-bar"></div><div class="switch-button"></div></div></div>
+          <div>Use OCG banlist <div id="switch-ocgBanlist" class="switch"><div class="switch-bar"></div><div class="switch-button"></div></div></div>
+          <div>Only use Konami DB data <div id="switch-konamiDBData" class="switch"><div class="switch-bar"></div><div class="switch-button"></div></div></div>
+      </div>
+      <div id="modal-about" class="noselect">
+          <div><b>About</b>
+
+  Developed and maintained by <a href="https://www.reddit.com/user/gallantron/" rel="author external nofollow" target="_blank">/u/gallantron</a> for <a href="https://www.reddit.com/r/yugioh/" target="_blank">/r/yugioh</a>.
+
+  While hoping it shall not become necessary, the author would like to grant to any person obtaining a copy of this web application the rights to use, copy, modify, merge, publish or distribute the application or copies thereof in the event that both the original author and the current maintainer have become unreachable.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+  This web application makes use of copyrighted, unlicensed text and imagery from the Yu-Gi-Oh! TRADING CARD GAME (©1996 KAZUKI TAKAHASHI). Due to the nature of the application, the author believes this to qualify as Fair Use under U.S. copyright law.
+
+  For information about how this application protects your data, please refer to the "Privacy" modal.
+          </div>
+      </div>
+      <div id="modal-privacy" class="noselect">
+          <div><b>Privacy</b>
+
+  This application is currently hosted using <a href="https://pages.github.com/" rel="noreferrer noopener" target="_blank">GitHub pages</a>.
+  As a result of you accessing this page, some potentially identifying information about your connection has unavoidably been exposed to the GitHub servers due to how the internet works. The author cannot speak for whether GitHub stores copies of this information.
+
+  The server hosting this application does not receive any information about the decks or cards you are viewing. All deck data is encoded in the anchor tag portion of the hyperlink URI, which is never transmitted to the server by your browser. This deck data is processed exclusively via client-side Javascript, which can be freely reviewed in unobfuscated form by perusing the dev console in your browser.
+
+  In the course of visualizing the deck data, card data and imagery is retrieved from the <a href="https://db.ygoprodeck.com/api-guide/" rel="noreferrer noopener" target="_blank">YGOPRODeck API</a>, again exposing some identifying information by necessity, combined with information about the card you are requesting. The author does not know whether YGOPRODeck stores this information longer than is necessary, but feels obliged to point out that YGOPRODeck has the <i>capability</i> to identify the cards you are viewing, and pattern analysis <i>could</i> allow them to reconstruct deck lists from this data.
+
+  The author does not believe YGOPRODeck to be engaged in any of the hypotheticals outlined, but feels compelled to point them out regardless.
+          </div>
+      </div>
+      <div id="modal-qr">
+      </div>
+      <div id="modal-copyable">
+          <div id="modal-copy-container"></div>
+          <div id="modal-copy-button" class="toolbox-button noselect">Click to copy<div class="toolbox-indicator">Copied!</div></div>
+      </div>
+  </div>
+
+  <link rel="stylesheet" href="modals.css"     />
+  <link rel="stylesheet" href="toolbox.css"    />
+  <link rel="stylesheet" href="import.css"     />
+
+  <!--<link rel="stylesheet" href="cardviewer.css" />
+  <link rel="stylesheet" href="narrow.css"     media="screen and (max-aspect-ratio: 10/7)" />
+
+  <link rel="manifest"   href="manifest.json"  /> -->
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+  <script defer src="include/easy.qrcode.js"></script>
+  <script defer src="cardviewer.js"></script>
+  <script defer src="carddata.js"></script>
+  <script defer src="compression.js"></script>
+  <script defer src="import-base.js"></script>
+  <script defer src="import-duelingbook.js"></script>
+  <script defer src="import-pdf.js"></script>
+  <script defer src="import-ydk.js"></script>
+  <script defer src="modals.js"></script>
+  <script defer src="orgdbdata.js"></script>
+  <script defer src="settings.js"></script>
+  <script defer src="toolbox.js"></script>
+  <script defer src="ygodeck.js"></script>
+
+  <script type="text/javascript">
+    var elem = document.documentElement;
+    function openFullscreen() {
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
+      }
+    }
+
+    function deckAdjust() {
+      if (isPortrait()) {
+        console.log("isPortrait -- " + isPortrait());
+        document.getElementById('navBar').classList.remove('collapsing');
+        document.getElementById('navBar').classList.remove('collapse');
+        document.getElementById('navBar').classList.remove('multi-collapse');
+        document.getElementById('navBar').classList.add('show');
+        console.log(document.getElementById('navBar').classList);
+        document.getElementById('toolbox').style.display= 'none';
+      //  document.getElementById('navicon').parentElement.removeAttribute('data-bs-toggle');
+      //  document.getElementById('toolbox').parentElement.removeAttribute('data-bs-toggle');
+      //  document.getElementById('navicon').parentElement.removeAttribute('data-bs-target');
+      //  document.getElementById('toolbox').parentElement.removeAttribute('data-bs-target');
+        document.getElementById('import-display').style.display= 'inline-block';
+        document.getElementById('import-box').style.display= 'none';
+        document.getElementById("main-container").style.height='95%';
+      } else {
+        if (document.getElementById('toolbox').classList.contains('show')){
+          document.getElementById('navBar').classList.remove('show');
+          document.getElementById("main-container").style.height='100%';
+        }
+        document.getElementById('navBar').classList.add('collapse');
+        document.getElementById('navBar').classList.add('multi-collapse');
+        document.getElementById('toolbox').removeAttribute('style');
+        //document.getElementById('navicon').parentElement.setAttribute('data-bs-toggle', 'collapse');
+        //document.getElementById('toolbox').parentElement.setAttribute('data-bs-toggle', 'collapse');
+        //document.getElementById('navicon').parentElement.setAttribute('data-bs-target', '.multi-collapse');
+        //document.getElementById('toolbox').parentElement.setAttribute('data-bs-target', '.multi-collapse');
+        document.getElementById('import-display').style.display= 'none';
+        document.getElementById('import-box').style.display= 'inline-block';
+      }
+      if (isHidden(document.getElementById('zoom-viewer')) && isHidden(document.getElementById('toolbox'))) {
+        document.getElementById('col2').style.minWidth='100%';
+      } else if (!isHidden(document.getElementById('zoom-viewer')) && isHidden(document.getElementById('toolbox'))) {
+        document.getElementById('col2').style.minWidth='70%';
+      } else if (isHidden(document.getElementById('zoom-viewer')) && !isHidden(document.getElementById('toolbox'))) {
+        document.getElementById('col2').style.minWidth='70%';
+      } else {
+        document.getElementById('col2').style.minWidth='55%';
+      }
+    }
+
+    function isHidden(el) {
+      var style = window.getComputedStyle(el);
+      var hidden = style.display === 'none';
+      return (hidden);
+    }
+
+    function isPortrait() {
+      return window. matchMedia("(orientation: portrait)"). matches;
+    }
+
+    function changeSize(isVisible) {
+      console.log("sizeChangedFromFunc -- " + isPortrait());
+      if (isPortrait()) {
+        if (isVisible === null) {
+          console.log('null');
+          return;
+        }
+        ShowModal('modal-toolbox');
+      } else {
+        if (isVisible) {
+          document.getElementById("main-container").style.height='100%';
+        } else {
+          document.getElementById("main-container").style.height='95%';
+          ClosePriceBreakdown();
+        }
+      }
+      deckAdjust();
+    }
+  </script>
+</body>
+
 </html>

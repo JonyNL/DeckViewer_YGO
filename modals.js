@@ -2,9 +2,10 @@ let currentModal = null;
 function ShowModal(id)
 {
     var newModal;
+    console.log(id + " -- " + currentModal);
     if (id)
         newModal = document.getElementById(id);
-    
+
     if (currentModal)
         currentModal.style.display = 'none';
     if (newModal)
@@ -39,7 +40,7 @@ document.addEventListener("DOMContentLoaded",function()
         navigator.clipboard.writeText(this.previousElementSibling.innerText).then(() =>
         {
             this.firstElementChild.style.display = 'block';
-            this.firstElementChild.style.display = 
+            this.firstElementChild.style.display =
             window.setTimeout(() =>
             {
                 this.firstElementChild.style.display = '';
@@ -47,7 +48,7 @@ document.addEventListener("DOMContentLoaded",function()
             }, 2000);
         });
     });
-    
+
     var switches = document.getElementsByClassName('switch');
     var toggle = function()
     {
@@ -57,7 +58,7 @@ document.addEventListener("DOMContentLoaded",function()
     };
     for (var i=0; i<switches.length; ++i)
         switches[i].addEventListener('click', toggle);
-    
+
     switch_to_setting('stackDuplicates');
     switch_to_setting('stackLTR');
     switch_to_setting('highResCards',true);

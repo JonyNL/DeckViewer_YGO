@@ -13,9 +13,9 @@ let attemptImport = function(handlers, data)
         if (ident)
         {
             isImporting = true;
-            var status = document.getElementById('import-status')
-            status.innerText = ('Now importing: ' + ident);
-            status.className = 'import-progress';
+            //var status = document.getElementById('import-status')
+            //status.innerText = ('Now importing: ' + ident);
+            //status.className = 'import-progress';
             return true;
         }
     }
@@ -30,9 +30,9 @@ function ImportAborted()
 {
     if (!IsImportInProgress())
         return;
-    var status = document.getElementById('import-status')
-    status.innerText = ('Import failed');
-    status.className = 'import-error';
+    //var status = document.getElementById('import-status')
+    //status.innerText = ('Import failed');
+    //status.className = 'import-error';
     window.setTimeout(ImportFinished, 2000);
 }
 
@@ -40,8 +40,8 @@ function ImportFinished()
 {
     if (!IsImportInProgress())
         return;
-    var status = document.getElementById('import-status')
-    status.innerText = '';
-    status.className = '';
+    //var status = document.getElementById('import-status')
+    //status.innerText = '';
+    //status.className = '';
     isImporting = false;
 }

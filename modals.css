@@ -1,5 +1,6 @@
 div#modal-background
 {
+    display: none;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -8,7 +9,7 @@ div#modal-background
     background: #000000;
     transition: opacity 1s ease-out;
     opacity: 0.6;
-    
+
     z-index: 50000;
 }
 div#modal-background:hover
@@ -35,6 +36,110 @@ div#modal-container > div
     border: 4px solid #777777;
     border-radius: 8px;
     z-index: 50002;
+}
+
+@media screen and (orientation:landscape) {
+  div#modal-viewer
+  {
+      width: 90%;
+      height: 90%;
+  }
+  div#modal-zoom-image {
+      width: 33.5%;
+      height: 71.5%;
+      padding-left: 2%;
+      float: left;
+      padding-right: 1%;
+  }
+
+  div#modal-zoom-image > img {
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  div#modal-zoom-name {
+      background: lightgrey;
+      border-radius: 4px;
+      margin: 2%;
+      height: 5%;
+      text-align: center;
+      font-weight: bold;
+  }
+
+  div#modal-zoom-viewer {
+    height: 100%;
+    overflow: auto;
+  }
+
+  div#modal-zoom-links {
+    float: right;
+    position: relative;
+    height: 8%;
+    width: fit-content;
+    margin-bottom: 2%;
+    margin-top: 2%;
+    margin-right: 2%;
+  }
+
+  div#modal-zoom-text {
+      background: lightgrey;
+      border-radius: 4px;
+      padding: 2%;
+      height: 71.5%;
+      font-style: italic;
+      width: 64.5%;
+      margin-right: 2%;
+      float: right;
+  }
+}
+
+@media screen and (orientation:portrait) {
+  div#modal-viewer
+  {
+      width: 90%;
+      height: 90%;
+      overflow: auto;
+  }
+
+  div#modal-zoom-image {
+      width: 100%;
+      height: auto;
+      padding-left: 2%;
+      float: left;
+      padding-right: 2%;
+  }
+
+  div#modal-zoom-name {
+      background: lightgrey;
+      border-radius: 4px;
+      margin: 2%;
+      height: 5%;
+      text-align: center;
+      font-weight: bold;
+  }
+
+  div#modal-zoom-links {
+    float: right;
+    height: 8%;
+    width: auto;
+    padding: 1%;
+    margin-right: 2%;
+    margin-bottom: 2%;
+  }
+
+  div#modal-zoom-text {
+      background: lightgrey;
+      border-radius: 4px;
+      padding: 2%;
+      height: auto;
+      width: 96%;
+      font-style: italic;
+      margin-right: 2%;
+      margin-left: 2%;
+      margin-top: 2%;
+      float: right;
+  }
 }
 
 div#modal-settings
@@ -84,15 +189,15 @@ div.switch.enabled > div.switch-button { left: 20px; }
 
 div#modal-about, div#modal-privacy, div#modal-copyable
 {
-    width: 700px;
-    height: 600px;
+    width: 95%;
+    height: 95%;
 }
 div#modal-about > div, div#modal-privacy > div, div#modal-copyable > div#modal-copy-container
 {
     white-space: pre-wrap;
-    
+
     font-family: Monospace;
-    
+
     position: absolute;
     left: 15px;
     top: 15px;
@@ -100,7 +205,7 @@ div#modal-about > div, div#modal-privacy > div, div#modal-copyable > div#modal-c
     bottom: 15px;
     padding: 10px;
     background: #cccccc;
-    
+
     overflow-y: auto;
 }
 div#modal-about > div > b
@@ -112,6 +217,6 @@ div#modal-copyable > div#modal-copy-container { overflow-x: auto; white-space: p
 
 div#modal-qr
 {
-    width: 256px;
-    height: 256px;
+    width: 264px;
+    height: 264px;
 }

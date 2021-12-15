@@ -3,7 +3,7 @@ function SortDeckCards(container)
     var l = []
     for (var i=0; i<container.children.length; ++i)
         l.push(container.children[i]);
-    
+
     const sortStyle = 'as-is';
     switch(sortStyle)
     {
@@ -30,13 +30,13 @@ function UpdateDeckCardLayout(container)
     const DECK_MARGIN_BOTTOM = DECK_MARGIN_BOTTOM_VH * DECK_HEIGHT_FACTOR;
     const CARD_HEIGHT = CARD_HEIGHT_VH * DECK_HEIGHT_FACTOR;
     const CARD_MARGIN_Y = CARD_MARGIN_Y_VH * DECK_HEIGHT_FACTOR;
-    
+
     var cardlist = SortDeckCards(container);
     var stackLTR = GetUserSettingBool('stackLTR'); // true for rightmost card in front of stack, false for leftmost card
     var stackDuplicates = GetUserSettingBool('stackDuplicates'); // true to stack subsequent identical cards
-    
+
     document.body.classList.toggle('stack-ltr', stackLTR);
-    
+
     var previousId = null;
     for (var factor = 1.0; factor > 0; factor *= 0.98)
     {
@@ -47,13 +47,13 @@ function UpdateDeckCardLayout(container)
         {
             var card = cardlist[i];
             card.style.zIndex = stackLTR ? (i+1) : (cardlist.length-i);
-            
+
             var dx;
             if (!stackDuplicates || previousId != card.cardId)
                 dx = CARD_WIDTH + CARD_MARGIN_X;
             else
                 dx = STACKED_CARD_WIDTH;
-            
+
             x += factor * dx;
             if (x + CARD_WIDTH > 100)
             {
@@ -73,9 +73,9 @@ function UpdateDeckCardLayout(container)
 
 function UpdateAllDeckLayouts()
 {
-    UpdateDeckCardLayout(document.getElementById('main-deck-container'));
-    UpdateDeckCardLayout(document.getElementById('extra-deck-container'));
-    UpdateDeckCardLayout(document.getElementById('side-deck-container'));
+    //UpdateDeckCardLayout(document.getElementById('main-deck-container'));
+    //UpdateDeckCardLayout(document.getElementById('extra-deck-container'));
+    //UpdateDeckCardLayout(document.getElementById('side-deck-container'));
 }
 
 function LimitedCallback(data)
@@ -128,32 +128,54 @@ function LimitedCallbackOrgDBFailed(e)
     this.title = ('Failed to retrieve Forbidden & Limited List status:\n- '+e);
 }
 
-function MakeDOMCard(id)
+function MakeDOMCard(deckType, id)
 {
     var main = document.createElement('div');
-    main.className = 'card';
+    switch (deckType) {
+      case "main":
+        main.className = 'y-main-card';
+        break;
+      case "extra":
+        main.className = 'y-ex-card';
+        break;
+      case "side":
+        main.className = 'y-side-card';
+        break;
+      default:
+        main.className = 'card';
+
+    }
     main.cardId = id;
+    //***
+    var relativeDiv = document.createElement('div');
+    relativeDiv.style.position='relative';
+
     main.addEventListener("click", ZoomThisCard);
-    
+
+    var limited = document.createElement('div');
+    limited.className = 'limited';
+    limited.setAttribute('style', 'position: absolute;width: 18%;right: -1%;top: -1%;');
+
+    var limitedPic = document.createElement('img');
+    limitedPic.setAttribute('style', 'position: absolute;');
+    limited.appendChild(limitedPic);
+
+    relativeDiv.appendChild(limited);
+
+    if (GetUserSettingBool('konamiDBData'))
+        window.RequestOrgDBData(id).then(LimitedCallbackOrgDB.bind(limitedPic)).catch(LimitedCallbackOrgDBFailed.bind(limitedPic));
+    else
+        RequestCardData(id, LimitedCallback, limitedPic);
+
     var pic = document.createElement('img');
     if (GetUserSettingBool('highResCards'))
         pic.src = 'https://storage.googleapis.com/ygoprodeck.com/pics/' + id + '.jpg';
     else
         pic.src = 'https://storage.googleapis.com/ygoprodeck.com/pics_small/' + id + '.jpg';
-    main.appendChild(pic);
-    
-    var limited = document.createElement('div');
-    limited.className = 'limited';
-    main.appendChild(limited);
-    
-    var limitedPic = document.createElement('img');
-    limited.appendChild(limitedPic);
-    
-    if (GetUserSettingBool('konamiDBData'))
-        window.RequestOrgDBData(id).then(LimitedCallbackOrgDB.bind(limitedPic)).catch(LimitedCallbackOrgDBFailed.bind(limitedPic));
-    else
-        RequestCardData(id, LimitedCallback, limitedPic);
-    
+    relativeDiv.appendChild(pic);
+
+    main.appendChild(relativeDiv);
+
     return main;
 }
 
@@ -162,7 +184,7 @@ function LoadDeck(cards, tag)
     var container = document.getElementById(tag+'-deck-container');
     while (container.lastChild)
         container.removeChild(container.lastChild);
-    
+
     if (cards)
     {
         for (var i=0, n=cards.length; i<n; ++i)
@@ -170,14 +192,14 @@ function LoadDeck(cards, tag)
             var id = cards[i][0];
             var count = cards[i][1];
             for (var j=0;j<count;++j)
-                container.appendChild(MakeDOMCard(id));
+                container.appendChild(MakeDOMCard(tag, id));
         }
     }
-    
-    var label = document.getElementById(tag+'-deck-label');
-    label.innerText = container.children.length + ')';
-    
-    UpdateDeckCardLayout(container);
+
+    //var label = document.getElementById(tag+'-deck-label');
+    //label.innerText = container.children.length + ')';
+
+    //UpdateDeckCardLayout(container);
 }
 
 let hashData = { decks: { main: null, extra: null, side: null }, title: null };
@@ -187,23 +209,40 @@ let updateFromHashData = function()
     {
         document.body.className = 'import';
         document.title = 'Deck Viewer';
+        document.getElementById('main-deck-container').innerHTML = '';
+        document.getElementById('extra-deck-container').innerHTML = '';
+        document.getElementById('side-deck-container').innerHTML = '';
+        document.getElementById('navBar').classList.add('collapse');
+        document.getElementById('navBar').classList.add('multi-collapse');
+        document.getElementById('navBar').classList.remove('show');
+        document.getElementById('main-container').style.display = 'none';
+        document.getElementById('import-container').style.display = 'block';
         return;
     }
+
+    document.getElementById('deck-name').replaceChild(document.createTextNode
+      (hashData.title), document.getElementById('deck-name').childNodes[0]);
+    document.getElementById('navBar').classList.add('show');
+    document.getElementById('toolbox').classList.remove('show');
+    document.getElementById('main-container').style.display = 'block';
+    document.getElementById('import-container').style.display = 'none';
+    changeSize(null);
     CloseZoomViewer();
     ClosePriceBreakdown();
     document.body.className = 'view';
-    
+
     LoadDeck(hashData.decks.main, 'main');
     LoadDeck(hashData.decks.extra, 'extra');
     LoadDeck(hashData.decks.side, 'side');
-    
+
     if (hashData.title)
         document.title = hashData.title + ' – Deck Viewer';
     else
         document.title = 'Deck Viewer';
-        
+
     if (GetUserSettingBool('alwaysLoadPrices'))
         LoadPriceBreakdown();
+
 };
 
 function SetDeckTitle(title) { hashData.title = (title && title.length) ? title : null; HashDataChanged(); }
@@ -222,7 +261,7 @@ function HashDataChanged()
         hashData.decks.extra = null;
     if (hashData.decks.side && !hashData.decks.side.length)
         hashData.decks.side = null;
-    
+
     var newTag = CompressDeckData(hashData.decks.main);
     if (hashData.decks.extra || hashData.decks.side)
         newTag += ';' + CompressDeckData(hashData.decks.extra);
@@ -230,9 +269,9 @@ function HashDataChanged()
         newTag += ';' + CompressDeckData(hashData.decks.side);
     if (hashData.title)
         newTag += ':' + encodeURIComponent(hashData.title);
-    
+
     document.location.hash = newTag;
-    
+
     updateFromHashData();
 }
 
@@ -248,17 +287,17 @@ function ReloadFromHashData()
         updateFromHashData();
         return;
     }
-    
+
     try
     {
         var datas = tag.substring(1).split(':');
         if (!datas.length)
             throw ('Invalid data structure');
-        
+
         var decks = datas[0].split(';')
         if (decks.length < 1 || decks.length > 3)
             throw ('Too few or too many decks (' + decks.length + ')');
-        
+
         hashData.decks.main = DecompressDeckData(decks[0]);
         hashData.decks.extra = (decks.length > 1) ? DecompressDeckData(decks[1]) : null;
         hashData.decks.side = (decks.length > 2) ? DecompressDeckData(decks[2]) : null;
@@ -266,7 +305,7 @@ function ReloadFromHashData()
             hashData.title = decodeURIComponent(datas[1]);
         else
             hashData.title = null;
-        
+
         HashDataChanged();
     }
     catch (error)
@@ -337,11 +376,12 @@ dummyInput.addEventListener('change', HandleFileSelect);
 document.addEventListener("DOMContentLoaded",function()
 {
     ReloadFromHashData();
-    
+
     document.getElementById('subtext-about').addEventListener('click', function() { ShowModal('modal-about'); });
     document.getElementById('subtext-privacy').addEventListener('click', function() { ShowModal('modal-privacy'); });
     document.body.addEventListener('paste', HandlePaste);
     document.getElementById('import-box').addEventListener('click', function() { dummyInput.click(); });
+    document.getElementById('import-display').addEventListener('click', function() { dummyInput.click(); });
 });
 
 window.addEventListener('message', function(e)
@@ -353,7 +393,7 @@ window.addEventListener('message', function(e)
 		elm.href = e.data.cssFile;
 		document.head.appendChild(elm);
 	}
-	
+
 	if ('tcgplayerAffiliate' in e.data)
 		window.tcgplayerAffiliate = e.data.tcgplayerAffiliate;
 });
