@@ -145,6 +145,7 @@ function MakeDOMCard(deckType, id)
         main.className = 'card';
 
     }
+    main.classList.add('hover');
     main.cardId = id;
     //***
     var relativeDiv = document.createElement('div');
