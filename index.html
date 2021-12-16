@@ -43,6 +43,10 @@
       width: 100%;
       border-radius: 4px;
     }
+    .hover:hover {
+      transform: scale(1.2);
+      z-index: 1;
+    }
 
     .limited {
       position: absolute;
@@ -69,21 +73,15 @@
         width: 20%;
       }
 
-      .y-main-card:hover {}
-
       .y-ex-card {
         padding: .5%;
         width: 20%;
       }
 
-      .y-ex-card:hover {}
-
       .y-side-card {
         padding: .5%;
         width: 20%;
       }
-
-      .y-side-card:hover {}
 
     }
 
@@ -95,29 +93,16 @@
         width: 10%;
       }
 
-      .y-main-card:hover {
-        transform: scale(1.2);
-        z-index: 1;
-      }
-
       .y-ex-card {
         padding: 0px;
         width: 10%;
         margin-right: -3.58%;
       }
 
-      .y-ex-card:hover {
-        transform: scale(1.2);
-      }
-
       .y-side-card {
         padding: 0px;
         width: 10%;
         margin-right: -3.58%;
-      }
-
-      .y-side-card:hover {
-        transform: scale(1.2);
       }
     }
 
@@ -455,9 +440,25 @@
       }
     }
 
+    var viewerIsHidden = isHidden(document.getElementById('zoom-viewer'));
     function deckAdjust() {
-      console.log('deck-adjust');
       ShowModal(null);
+
+      var viewerIsInvisible = isHidden(document.getElementById('zoom-viewer'));
+      if (viewerIsInvisible !== viewerIsHidden) {
+        viewerIsHidden = viewerIsInvisible;
+        if (!viewerIsHidden) {
+          var cards = document.getElementById('main-deck-container').childNodes;
+          cards.forEach((card) => {
+            card.classList.add('hover');
+          });
+        } else {
+          var cards = document.getElementById('main-deck-container').childNodes;
+          cards.forEach((card) => {
+            card.classList.remove('hover');
+          });
+        }
+      }
 
       if (isPortrait()) {
         document.getElementById('navBar').classList.add('show');
@@ -514,7 +515,6 @@
           ClosePriceBreakdown();
         }
       }
-      console.log('deck adjust');
       deckAdjust();
     }
   </script>

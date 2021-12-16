@@ -7,9 +7,13 @@ function ShowModal(id)
 
     if (currentModal) {
       currentModal.style.display = 'none';
-      var toolboxModal = (currentModal.id === 'modal-toolbox');
-      if (toolboxModal){
-        ClosePriceBreakdownModal();
+      switch (currentModal.id) {
+        case 'modal-toolbox':
+          ClosePriceBreakdownModal();
+          break;
+          case 'modal-viewer':
+          CloseZoomViewer();
+          break;
       }
     }
     if (newModal)
