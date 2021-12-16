@@ -452,10 +452,30 @@
           cards.forEach((card) => {
             card.classList.add('hover');
           });
+
+          cards = document.getElementById('extra-deck-container').childNodes;
+          cards.forEach((card) => {
+            card.classList.add('hover');
+          });
+
+          cards = document.getElementById('side-deck-container').childNodes;
+          cards.forEach((card) => {
+            card.classList.add('hover');
+          });
         } else {
           var cards = document.getElementById('main-deck-container').childNodes;
           cards.forEach((card) => {
             card.classList.remove('hover');
+          });
+
+          cards = document.getElementById('extra-deck-container').childNodes;
+          cards.forEach((card) => {
+            card.classList.add('hover');
+          });
+
+          cards = document.getElementById('side-deck-container').childNodes;
+          cards.forEach((card) => {
+            card.classList.add('hover');
           });
         }
       }
