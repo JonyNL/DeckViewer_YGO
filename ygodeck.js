@@ -196,13 +196,16 @@ function LoadDeck(cards, tag)
                 container.appendChild(MakeDOMCard(tag, id));
         }
     }
+
+    var label = document.getElementById(tag+'-label');
+    label.innerHTML = tag.charAt(0).toUpperCase() + tag.slice(1) + ' Deck (' +
+    container.children.length + ')';
+
     if (!container.hasChildNodes())
       document.getElementById(tag+'-deck').style.background='grey';
     else
       document.getElementById(tag+'-deck').removeAttribute('style');
 
-    //var label = document.getElementById(tag+'-deck-label');
-    //label.innerText = container.children.length + ')';
 
     //UpdateDeckCardLayout(container);
 }

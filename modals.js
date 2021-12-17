@@ -2,7 +2,6 @@ let currentModal = null;
 function ShowModal(id)
 {
     var newModal;
-      || currentModal===undefined)?currentModal:currentModal.id));
     if (id)
         newModal = document.getElementById(id);
     if (currentModal) {

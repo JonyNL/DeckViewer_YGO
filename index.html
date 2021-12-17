@@ -65,7 +65,7 @@
       border-right-style: solid;
       border-radius: 8px;
       display: flow-root;
-      height: fit-content;
+      height: 5%;
     }
 
     @media screen and (orientation:portrait) {
@@ -270,7 +270,7 @@
       </div>
   </div>
 
-  <div id="main-container" class="container-fluid">
+  <div id="main-container" class="container-fluid" style="position: fixed">
     <div class="row align-items-start">
       <div class="col show d-none d-lg-block" id="zoom-viewer">
             <div id="zoom-name"></div>
@@ -283,15 +283,15 @@
               <div id="zoom-text" style="font-style: italic">Click any card to view it here...</div>
       </div>
       <div id="col2" class="col">
-        <div class="deck-label">Main Deck</div>
+        <div id="main-label" class="deck-label">Main Deck</div>
         <div id="main-deck" class="col">
           <div id="main-deck-container" class="row"></div>
         </div>
-        <div class="deck-label">Extra Deck</div>
+        <div id="extra-label" class="deck-label">Extra Deck</div>
         <div id="extra-deck" class="col">
           <div id="extra-deck-container" class="row"></div>
         </div>
-        <div class="deck-label">Side Deck</div>
+        <div id="side-label" class="deck-label">Side Deck</div>
         <div id="side-deck" class="col">
           <div id="side-deck-container" class="row"></div>
         </div>
@@ -339,7 +339,7 @@
               </div>
       </div>
       <div id="modal-toolbox" class="col" aria-expanded="false">
-        <p style="margin: 0; width: 100%; text-align: center;">
+        <p style="margin: 0; width: 100%; text-align: center; font-size: 4vh">
           Toolbox
         </p>
         <div id="modal-toolbox-main">

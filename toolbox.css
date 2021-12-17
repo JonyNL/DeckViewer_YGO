@@ -5,14 +5,12 @@ div.toolbox-button
     background: #999999;
     transition: background 1s ease-out;
     cursor: pointer;
-
     border: 2px solid #777777;
     border-radius: 4px;
     padding: 0px 5px;
-    margin: 2px 3px;
-
+    margin: 1% 1.5%;
     font-family: Verdana, Geneva, sans-serif;
-    font-size: 13px;
+    font-size: 2vh;
 }
 div.toolbox-button:hover { background: #bbbbbb; }
 div.toolbox-button > div.toolbox-indicator
@@ -75,7 +73,7 @@ div#modal-toolbox-main
 {
     padding: 1px 3px;
     text-align: center;
-    height:12em;
+    height: 40vh;
 }
 
 div#modal-toolbox-main > div
@@ -90,7 +88,7 @@ div#modal-toolbox-price
 {
     padding: 1px 3px;
     text-align: center;
-    height: calc(100% - 13.6em);
+    height: calc(100% - 46vh);
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -106,12 +104,12 @@ div#modal-toolbox-price-list
 div.price-entry
 {
     position: relative;
-    height: 20px;
+    height: 2.2vh;
 }
 
 div.price-entry + div.price-entry
 {
-    margin-top: 2px;
+    margin-top: 0.5vh;
 }
 
 div.price-entry > div
@@ -123,8 +121,8 @@ div.price-entry > div
 
 div.price-entry > div > a
 {
-    width: 19px;
-    height: 19px;
+    width: 2vh;
+    height: 2vh;
     cursor: pointer;
     display: inline-block;
 }
@@ -138,10 +136,9 @@ div.price-entry > div > a > img
 div.price-entry > div.price-name
 {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-    font-size: 13px;
-    line-height: 20px;
+    font-size: 2vh;
+    line-height: 2vh;
     text-align: left;
-
     left: 0;
     right: 96px;
     white-space: nowrap;
@@ -159,13 +156,11 @@ div.price-entry.price-total > div.price-name { font-weight: bold; }
 div.price-entry > div.price-price
 {
     display: none;
-
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-    font-size: 13px;
-    line-height: 20px;
+    font-size: 2vh;
+    line-height: 2vh;
     text-align: right;
-
-    right: 44px;
+    right: 8vh;
     width: 50px;
 }
 div.price-entry.price-okay > div.price-price { display: block; }
@@ -174,8 +169,8 @@ div.price-entry.price-total > div.price-price { display: block; font-weight: bol
 div.price-entry > div.price-link-ygop
 {
     display: none;
-    right: 22px;
-    width: 20px;
+    right: 3vh;
+    width: 2vh;
 }
 div.price-entry.price-okay > div.price-link-ygop { display: block; }
 
@@ -183,7 +178,7 @@ div.price-entry > div.price-link-cm
 {
     display: none;
     right: 0;
-    width: 20px;
+    width: 3vh;
 }
 div.price-entry.price-okay > div.price-link-cm { display: block; }
 
@@ -193,7 +188,7 @@ div.price-entry > div.price-progress
 
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     font-size: 13px;
-    line-height: 20px;
+    line-height: 2vh;
     color: #555555;
 
     white-space: nowrap;
@@ -210,7 +205,7 @@ div.price-entry > div.price-error
 
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     font-size: 13px;
-    line-height: 20px;
+    line-height: 2vh;
     color: #aa0000;
     text-decoration: underline;
     text-decoration-style: dotted;
