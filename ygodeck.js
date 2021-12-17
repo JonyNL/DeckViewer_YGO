@@ -196,6 +196,10 @@ function LoadDeck(cards, tag)
                 container.appendChild(MakeDOMCard(tag, id));
         }
     }
+    if (!container.hasChildNodes())
+      document.getElementById(tag+'-deck').style.background='grey';
+    else
+      document.getElementById(tag+'-deck').removeAttribute('style');
 
     //var label = document.getElementById(tag+'-deck-label');
     //label.innerText = container.children.length + ')';
@@ -208,7 +212,6 @@ let updateFromHashData = function()
 {
     if (!hashData.decks.main)
     {
-      console.log('noHashData');
         document.body.className = 'import';
         document.title = 'Deck Viewer';
         document.getElementById('main-deck-container').innerHTML = '';

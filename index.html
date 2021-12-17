@@ -59,12 +59,13 @@
     }
 
     .nav {
+      position: relative;
       background: darkgray;
       border-bottom-style: solid;
       border-right-style: solid;
       border-radius: 8px;
       display: flow-root;
-      height: 5%;
+      height: fit-content;
     }
 
     @media screen and (orientation:portrait) {
@@ -179,6 +180,7 @@
       padding-right: 14px;
       margin-top: .2%;
       margin-bottom: .6%;
+      min-height: 5vh;
     }
 
     div#side-deck {
@@ -186,12 +188,13 @@
       padding-right: 14px;
       margin-top: .2%;
       margin-bottom: 1%;
+      min-height: 5vh;
     }
 
     li#deck-name {
-      float: left;
       height: 100%;
-      width: 90%;
+      width: 100%;
+      padding-right: 17%;
       text-align: center;
       font-size: 3.5vh;
       font-family: auto;
@@ -199,9 +202,11 @@
     }
 
     li#coll-btn {
-      float: right;
+      position: absolute;
       height: 100%;
-      width: 10%;
+      width: 100%;
+      margin-left: auto;
+      margin-right: 0px;
     }
 
     img#navicon {
@@ -228,17 +233,16 @@
   </style>
 </head>
 
-<body onload="deckAdjust()" onresize="deckAdjust()" ondrop="HandleDrop(event);"
+<body onload="deckAdjust()" onresize="deckAdjust();closeModal();" ondrop="HandleDrop(event);"
       ondragover="HandleDrag(event);">
   <ul id="navBar" class="nav collapse multi-collapse show"
   aria-expanded="true">
-    <li id="deck-name" class="nav-item">
-      <div>Deck name</div>
     <li id="coll-btn" class="nav-item">
       <a class="nav-link active" data-bs-toggle="collapse"
       aria-current="page" data-bs-target=".multi-collapse"
       style="width: auto;height: 100%;padding: 0;">
       <img  onclick="changeSize(true)" id="navicon" src="navbar.png" alt=""></a>
+      <li id="deck-name" class="nav-item">
   </ul>
 
   <div id="import-container" class="noselect">
@@ -440,9 +444,12 @@
       }
     }
 
+    function closeModal() {
+      ShowModal(null);
+    }
+
     var viewerIsHidden = isHidden(document.getElementById('zoom-viewer'));
     function deckAdjust() {
-      ShowModal(null);
 
       var viewerIsInvisible = isHidden(document.getElementById('zoom-viewer'));
       if (viewerIsInvisible !== viewerIsHidden) {
@@ -535,6 +542,7 @@
           ClosePriceBreakdown();
         }
       }
+
       deckAdjust();
     }
   </script>
