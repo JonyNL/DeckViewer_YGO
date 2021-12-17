@@ -5,7 +5,7 @@ body.import > div#import-container { display: block; }
   {
       cursor: default;
       position: absolute;
-      width: 50%;
+      width:100%;
       top: 50%;
       margin-top: calc(-2px + -18vh);
       text-align: center;
